@@ -1,3 +1,6 @@
+;通过一条矩形的斜边来表示矩形
+;可以使用练习2.2的函数来表示斜线
+
 (define (make-segment start end)
   (cons start end))
 
