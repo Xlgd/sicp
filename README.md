@@ -1,2 +1,1 @@
-# SICP
-## Some sicp's things.
+# sicp exercises
