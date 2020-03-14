@@ -13,6 +13,8 @@
 (define (sub x y) (apply-generic 'sub x y))
 (define (mul x y) (apply-generic 'mul x y))
 (define (div x y) (apply-generic 'div x y))
+(define (equ? x y) (apply-generic 'equ? x y))
+(define (=zero? x) (apply-generic '=zero? x))
 
 (define (install-scheme-number-package)
   (define (tag x)
@@ -27,6 +29,16 @@
        (lambda (x y) (tag (/ x y))))
   (put 'make 'scheme-number
        (lambda (x) (tag x)))
+
+  ;;new equ? method
+  (put 'equ? '(scheme-number scheme-number)
+       (lambda (x y)
+         (if (= x y) true false)))
+  
+  ;;new =zero? method
+  (put '=zero? 'scheme-number
+       (lambda (x) (= x 0)))
+  
   'done)
 
 (define (make-scheme-number n)
@@ -55,6 +67,14 @@
     (make-rat (* (numer x) (denom y))
               (* (denom x) (numer y))))
 
+  ;;new equ? method
+  (define (equ? x y)
+    (= (* (numer x) (denom y))
+       (* (numer y) (denom x))))
+
+  ;;new =zero? method
+  (define (=zero? x) (= (numer x) 0))
+
   ;;interface to the rest of the system
   (define (tag x) (attach-tag 'rational x))
   (put 'add '(rational rational)
@@ -67,6 +87,12 @@
        (lambda (x y) (tag (div-rat x y))))
   (put 'make 'rational
        (lambda (n d) (tag (make-rat n d))))
+
+  (put 'equ? '(rational rational)
+       (lambda (x y) (equ? x y)))
+
+  (put '=zero? 'rational
+       (lambda (x) (=zero? x)))
   'done)
 
 (define (make-rational n d)
@@ -94,10 +120,15 @@
     (make-from-mag-ang (/ (magnitude z1) (magnitude z2))
                        (- (angle z1) (angle z2))))
 
-  (define (add-complex-to-schemenum z x)
-    (make-from-real-imag (+ (real-part z) x)
-                         (imag-part z)))
-  
+  ;;new equ? method
+  (define (equ? z1 z2)
+    (and (= (real-part z1) (real-part z2))
+         (= (imag-part z1) (imag-part z2))))
+
+  ;;new =zero? method
+  (define (=zero? z)
+    (and (= (real-part z) 0)
+         (= (imag-part z) 0)))
 
   ;;interface to rest of the system
   (define (tag z) (attach-tag 'complex z))
@@ -113,13 +144,17 @@
        (lambda (x y) (tag (make-from-real-imag x y))))
   (put 'make-from-mag-ang 'complex
        (lambda (r a) (tag (make-from-mag-ang r a))))
-  (put 'add '(complex scheme-number)
-       (lambda (z x) (tag (add-complex-to-schemenum z x))))
 
   (put 'real-part '(complex) real-part)
   (put 'imag-part '(complex) imag-part)
   (put 'magnitude '(complex) magnitude)
   (put 'angle '(complex) angle)
+
+  (put 'equ? '(complex complex)
+       (lambda (z1 z2) (equ? z1 z2)))
+
+  (put '=zero? 'complex
+       (lambda (z) (=zero? z)))
   
   'done)
 
@@ -128,3 +163,4 @@
 
 (define (make-complex-from-mag-ang x y)
   ((get 'make-from-mag-ang 'complex) r a))
+
