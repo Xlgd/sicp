@@ -33,7 +33,7 @@
   ((get 'make 'scheme-number) n))
 
 
-(define (install-reational-package)
+(define (install-rational-package)
   ;;internal procedures
   (define (numer x) (car x))
   (define (denom x) (cdr x))
