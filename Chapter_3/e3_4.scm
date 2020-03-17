@@ -1,0 +1,25 @@
+#lang sicp
+
+(define (make-account balance secpasswd)
+  (define max-error-number 7)
+  (define (call-the-cops) (error "Call the cops!"))
+  (define (withdraw amount)
+    (if (>= balance amount)
+        (begin (set! balance (- balance amount))
+               balance)
+        "Insufficient funds"))
+  (define (deposit amount)
+    (begin (set! balance (+ balance amount))
+           balance))
+  (define (dispatch passwd m)
+    (if (not (eq? passwd secpasswd))
+        (begin (set! max-error-number (- max-error-number
+                                         1))
+               (if (= max-error-number 0)
+                   (call-the-cops)
+                   (error "Incorrect password" passwd)))
+        (cond ((eq? m 'withdraw) withdraw)
+              ((eq? m 'deposit) deposit)
+              (else (error "Unknown request -- MAKE-ACCOUNT"
+                       m)))))
+  dispatch)
