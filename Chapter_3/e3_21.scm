@@ -39,4 +39,9 @@
            (iter-print point queue))))
   (iter-print (front-ptr queue) queue))
 
+;;simple answer
+
+(define (print-queue queue)
+    (car queue))
+
 (define q1 (make-queue))
