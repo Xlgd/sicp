@@ -77,6 +77,7 @@
           (begin (set! signal-value new-value)
                  (call-each action-procedures))
           'done))
+   
     (define (accept-action-procedures! proc)
       (set! action-procedures (cons proc action-procedures))
       (proc))
@@ -103,3 +104,33 @@
 
 (define (add-action! wire action-procedure)
   ((wire 'add-action!) action-procedure))
+
+(define (after-delay delay action)
+  (add-to-agenda! (+ delay (current-time the-agenda))
+                  action
+                  the-agenda))
+
+(define (propagate)
+  (if (empty-agenda? the-agenda)
+      'done
+      (let ((first-item (first-agendda-item the-agenda)))
+        (first-item)
+        (remove-first-agenda-item! the-agenda)
+        (propagate))))
+
+(define (probe name wire)
+  (add-action! wire
+               (lambda ()
+                 (newline)
+                 (display name)
+                 (display " ")
+                 (display (current-time the-agenda))
+                 (display " New-value = ")
+                 (display (get-signal wire)))))
+
+(define the-agenda (make-agenda))
+(define inverter-delay 2)
+(define and-gate-delay 3)
+(define or-gate-delay 5)
+
+
