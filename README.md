@@ -1,9 +1,9 @@
 # sicp exercises
 
 ## 一些参考答案
-[SICP wiki](http://sicp.readthedocs.io/en/latest/index.html)
+[SICP 解题集](http://sicp.readthedocs.io/en/latest/index.html)
 
-[SICP解题集](http://community.schemewiki.org/?SICP-Solutions)
+[SICP Wiki](http://community.schemewiki.org/?SICP-Solutions)
 
 ## 相关资料
 [SICP Python描述 中文版](https://wizardforcel.gitbooks.io/sicp-py/content/)
