@@ -31,7 +31,11 @@
 
 (define (stream-car stream) (car stream))
 (define (stream-cdr stream) (force (cdr stream)))
+(define (cons-stream a b)
+  (cons a (delay b)))
 
+(define (delay exp)
+  (lambda () exp))
 
 (define (force delayed-object)
   (delayed-object))
@@ -82,13 +86,7 @@
 (define (add-streams s1 s2)
   (stream-map + s1 s2))
 
-(define integers (cons-stream 1 (add-streams ones integers)))
-
-(define fibs
-  (cons-stream 0
-               (cons-stream 1
-                            (add-streams (stream-cdr fibs)
-                                         fibs))))
+;(define integers (cons-stream 1 (add-streams ones integers)))
 
 (define (scale-stream stream factor)
   (stream-map (lambda (x) (* x factor)) stream))
