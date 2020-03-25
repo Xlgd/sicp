@@ -24,10 +24,6 @@
         (else
          (error "Unknown expression type -- EVAL" exp))))
 
-
-(define (make-lambda parameters body)
-  (cons 'lambda (cons parameters body)))
-
 ;;eval-let
 (define (let? exp)
   (tagged-list? exp 'let))
