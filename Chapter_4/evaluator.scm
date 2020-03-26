@@ -1,5 +1,5 @@
 #lang sicp
-;eval
+
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)
         ((variable? exp) (lookup-variable-value exp env))
@@ -20,7 +20,7 @@
         (else
          (error "Unknown expression type -- EVAL" exp))))
 
-;apply
+
 (define (apply procedure arguments)
   (cond ((primitive-procedure? procedure)
          (apply-primitive-procedure procedure arguments))
@@ -34,7 +34,6 @@
         (else
          (error "Unknown procedure type -- APPLY" procedure))))
 
-;过程参数
 (define (list-of-values exps env)
   (if (no-operands? exps)
       '()
@@ -47,7 +46,7 @@
 (define (first-operand ops) (car ops))
 (define (rest-operands ops) (cdr ops))
 
-;条件if
+
 (define (eval-if exp env)
   (if (true? (eval (if-predicate exp) env))
       (eval (if-consequent exp) env)
@@ -62,13 +61,13 @@
 (define (make-if predicate consequent alternative)
   (list 'if predicate consequent alternative))
 
-;序列
+
 (define (eval-sequence exps env)
   (cond ((last-exp? exps) (eval (first-exp exps) env))
         (else (eval (first-exp exps) env)
               (eval-sequence (rest-exps exps) env))))
 
-;赋值和定义
+
 (define (eval-assignment exp env)
   (set-variable-value! (assignment-variable exp)
                        (eval (assignment-value exp) env)
@@ -79,13 +78,12 @@
                  (eval (definition-value exp) env)
                  env)
   'ok)
-;(set! <var> <value>)
+
 (define (assignment? exp)
   (tagged-list? exp 'set!))
 (define (assignment-variable exp) (cadr exp))
 (define (assignment-value exp) (caddr exp))
-;(define <var> <value>) /
-;(define <var> <parameter1>...<parametern>) <body>)
+
 (define (definition? exp)
   (tagged-list? exp 'define))
 (define (definition-variable exp)
@@ -97,7 +95,7 @@
       (caddr exp)
       (make-lambda (cdadr exp) (cddr exp))))
 
-;表达式的表示
+
 (define (self-evaluating? exp)
   (cond ((number? exp) true)
         ((string? exp) true)
@@ -111,14 +109,14 @@
       (eq? (car exp) tag)
       false))
 
-;lambda
+
 (define (lambda? exp) (tagged-list? exp 'lambda))
 (define (lambda-parameters exp) (cadr exp))
 (define (lambda-body exp) (cddr exp))
 (define (make-lambda parameters body)
   (cons 'lambda (cons parameters body)))
 
-;begin
+
 (define (begin? exp) (tagged-list? exp 'begin))
 (define (begin-actions exp) (cdr exp))
 (define (last-exp? seq) (null? (cdr seq)))
@@ -130,7 +128,7 @@
         (else (make-begin seq))))
 (define (make-begin seq) (cons 'begin seq))
 
-;cond
+
 (define (cond? exp) (tagged-list? exp 'cond))
 (define (cond-clauses exp) (cdr exp))
 (define (cond-else-clause? clause)
@@ -152,13 +150,13 @@
                      (sequence->exp (cond-actions first))
                      (expand-clauses rest))))))
 
-;谓词检测
+
 (define (true? x)
   (not (eq? x false)))
 (define (false? x)
   (eq? x false))
 
-;过程的表示
+
 (define (make-procedure parameters body env)
   (list 'procedure parameters body env))
 (define (compound-procedure? p)
@@ -167,7 +165,7 @@
 (define (procedure-body p) (caddr p))
 (define (procedure-environment p) (cadddr p))
 
-;对环境的操作
+
 (define (enclosing-environment env) (cdr env))
 (define (first-frame env) (car env))
 (define the-empty-environment '())
@@ -245,7 +243,6 @@
         (list 'cdr cdr)
         (list 'cons cons)
         (list 'null? null?)
-        ;<others>
         ))
 (define (primitive-procedure-names)
   (map car primitive-procedures))
@@ -277,6 +274,8 @@
                (procedure-body object)
                '<procedure-env>))
       (display object)))
+
+(driver-loop)
 
          
 
